@@ -1,0 +1,17 @@
+streamlit
+google-generativeai
+python-dotenv
+pillow
+pandas
+numpy
+pandas
+streamlit
+pillow
+google-generativeai
+python-dotenv
+torch
+torchvision
+bcrypt
+reportlab
+plotly
+opencv-python

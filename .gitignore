@@ -1,0 +1,12 @@
+venv/
+.env
+__pycache__/
+*.pyc
+uploads/
+comparison_results/
+models/checkpoint_latest.pth
+models/best_model.pth
+models/logo_classifier.pth
+eatsafe.db
+EatSafe_Report.pdf
+.vscode/

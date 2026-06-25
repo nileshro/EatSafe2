@@ -1,0 +1,15 @@
+
+credentials:
+  usernames:
+    ayush:
+      email: ayush@gmail.com
+      name: Ayush
+      password: '$2b$12$QJ3M4F2x8oRkT4W3nVw5XeQ5P8N2Q7v0V0h1mX4Y0Q1lP7Kf7n3Oe'
+cookie:
+  expiry_days: 30
+  key: eatsafe_key
+  name: eatsafe_cookie
+
+preauthorized:
+  emails:
+    - ayush@gmail.com
