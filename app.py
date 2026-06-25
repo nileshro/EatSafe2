@@ -552,7 +552,13 @@ elif page == "📷  Scan Product":
         cam = st.camera_input(f"📸 Capture: {step_labels[step - 1]}", key=f"cam_{step}")
 
         if cam:
-            st.session_state.scan_images[step] = Image.open(cam)
+            from PIL import ImageOps
+
+            img = Image.open(cam)
+            img = ImageOps.exif_transpose(img)
+            img = img.convert("RGB")
+            img.thumbnail((1600,1600))
+            st.session_state.scan_images[step] = img
             if step < 3:
                 if st.button(f"Next → {step_labels[step]}", key="next_step_btn"):
                     st.session_state.scan_step = step + 1
@@ -581,28 +587,46 @@ elif page == "📷  Scan Product":
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # ── UPLOAD ────────────────────────────────────────────────────────────────
+# ── UPLOAD ────────────────────────────────────────────────────────────────
     else:
-        st.markdown('<div class="es-card">', unsafe_allow_html=True)
-        st.markdown("**Upload 3 images** in order: front package → nutrition label → ingredients")
-        uploaded = st.file_uploader(
-            "Drop images here",
-            type=["jpg", "jpeg", "png", "webp"],
-            accept_multiple_files=True,
-            label_visibility="collapsed"
+        front = st.file_uploader(
+            "Front Package",
+            type=["jpg","jpeg","png","webp"]
         )
-        if uploaded:
-            if len(uploaded) < 3:
-                st.warning(f"Need at least 3 images. ({len(uploaded)}/3 uploaded)")
-            else:
-                images       = [Image.open(f) for f in uploaded]
-                images_ready = True
-                prev_cols    = st.columns(3)
-                labels_up    = ["Front Package", "Nutrition Label", "Ingredients"]
-                for i, (col, f) in enumerate(zip(prev_cols, uploaded[:3])):
-                    with col:
-                        st.image(f, caption=labels_up[i], width='stretch')
-        st.markdown("</div>", unsafe_allow_html=True)
+
+        nutrition = st.file_uploader(
+            "Nutrition Label",
+            type=["jpg","jpeg","png","webp"]
+        )
+
+        ingredients = st.file_uploader(
+            "Ingredients",
+            type=["jpg","jpeg","png","webp"]
+        )
+
+        if front and nutrition and ingredients:
+
+            from PIL import ImageOps
+
+            images = []
+
+            for f in [front, nutrition, ingredients]:
+                img = Image.open(f)
+                img = ImageOps.exif_transpose(img)
+                img = img.convert("RGB")
+                img.thumbnail((1600, 1600))
+                images.append(img)
+
+            images_ready = True
+
+            c1, c2, c3 = st.columns(3)
+
+            with c1:
+                st.image(images[0], caption="Front",       use_container_width=True)
+            with c2:
+                st.image(images[1], caption="Nutrition",   use_container_width=True)
+            with c3:
+                st.image(images[2], caption="Ingredients", use_container_width=True)
 
     # ── ANALYSE ───────────────────────────────────────────────────────────────
     if images_ready:
